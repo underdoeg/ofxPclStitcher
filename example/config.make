@@ -77,7 +77,7 @@
 # incorporated directly into the final executable application binary.
 ################################################################################
 # PROJECT_LDFLAGS=-Wl,-rpath=./libs
-PROJECT_LDFLAGS = -lOpenNI -lboost_system
+PROJECT_LDFLAGS = -lOpenNI -lboost_system -lpcl_io
 
 ################################################################################
 # PROJECT DEFINES
