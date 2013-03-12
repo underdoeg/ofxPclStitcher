@@ -1,0 +1,3 @@
+ofxPclStitcher
+ofxGui
+ofxXmlSettings
