@@ -38,12 +38,12 @@ ofxPclStitcherDevice::ofxPclStitcherDevice(string address, bool dc) {
 ofxPclStitcherDevice::~ofxPclStitcherDevice() {
 }
 
-void ofxPclStitcherDevice::cloudCallback(const ofxPclCloudPtr cloudIn)
+void ofxPclStitcherDevice::cloudCallback(const ofxPclCloudConstPtr cloudIn)
 {
 	ofLog() << "CLOUD IN";
 }
 
-void ofxPclStitcherDevice::cloudCallbackColor(const ofxPclCloudPtrColor cloudIn)
+void ofxPclStitcherDevice::cloudCallbackColor(const ofxPclCloudConstPtrColor cloudIn)
 {
 	ofLog() << "CLOUD IN";
 }

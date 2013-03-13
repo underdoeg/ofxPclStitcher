@@ -15,11 +15,11 @@ typedef pcl::PointXYZRGBA ofxPclPointColor;
 typedef pcl::PointCloud<ofxPclPoint> ofxPclCloud;
 typedef pcl::PointCloud<ofxPclPointColor> ofxPclCloudColor;
 
-typedef typename ofxPclCloud::Ptr ofxPclCloudPtr;
-typedef typename ofxPclCloudColor::Ptr ofxPclCloudPtrColor;
+typedef ofxPclCloud::Ptr ofxPclCloudPtr;
+typedef ofxPclCloudColor::Ptr ofxPclCloudPtrColor;
 
-typedef typename ofxPclCloud::ConstPtr ofxPclCloudConstPtr;
-typedef typename ofxPclCloudColor::ConstPtr ofxPclCloudConstPtrColor;
+typedef ofxPclCloud::ConstPtr ofxPclCloudConstPtr;
+typedef ofxPclCloudColor::ConstPtr ofxPclCloudConstPtrColor;
 
 
 class ofxPclStitcherDevice {
@@ -27,8 +27,8 @@ public:
 	~ofxPclStitcherDevice();
 
 private:
-	void cloudCallbackColor(const ofxPclCloudPtrColor cloudIn);
-	void cloudCallback(const ofxPclCloudPtr cloudIn);
+	void cloudCallbackColor(const ofxPclCloudConstPtrColor cloudIn);
+	void cloudCallback(const ofxPclCloudConstPtr cloudIn);
 	 /*
 	 {
 		//thread safety first
