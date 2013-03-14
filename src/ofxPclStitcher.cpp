@@ -8,6 +8,8 @@ ofxPclStitcher::~ofxPclStitcher() {
 
 void ofxPclStitcher::setup(bool autoCreateDevices, bool dc) {
 	doColors = dc;
+	downsample.set("DOWNSAMPLE", true);
+	downsampleSize.set("DOWNSAMPLE SIZE", .3, 0.001, 3);
 
 	if(autoCreateDevices) {
 		unsigned int numDevices = 0;
@@ -38,7 +40,8 @@ void ofxPclStitcher::setup(bool autoCreateDevices, bool dc) {
 
 ofxPclStitcherDevice* ofxPclStitcher::createDevice()
 {
-	return createDevice(curDeviceNumber);
+	curDeviceNumber++;
+	return createDevice(curDeviceNumber-1);
 }
 
 ofxPclStitcherDevice* ofxPclStitcher::createDevice(int number)
@@ -49,6 +52,25 @@ ofxPclStitcherDevice* ofxPclStitcher::createDevice(int number)
 ofxPclStitcherDevice* ofxPclStitcher::createDevice(string address)
 {
 	ofxPclStitcherDevice* device = new ofxPclStitcherDevice(address, doColors);
+	device->downsample = downsample;
+	device->downsampleSize = downsampleSize;
 	devices.push_back(ofPtr<ofxPclStitcherDevice>(device));
 	return device;
+}
+
+void ofxPclStitcher::update()
+{
+	//copy clouds over from thread
+	for(DeviceList::iterator it = devices.begin();it != devices.end();it++){
+		(*it)->copyCloudFromThread();
+	}
+
+	for(DeviceList::iterator it = devices.begin();it != devices.end();it++){
+		(*it)->processCloud();
+	}
+}
+
+void ofxPclStitcher::draw()
+{
+
 }

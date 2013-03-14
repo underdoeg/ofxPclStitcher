@@ -147,6 +147,8 @@
         <File Name="../../../../addons/ofxPclStitcher/src/ofxPclStitcher.cpp"/>
         <File Name="../../../../addons/ofxPclStitcher/src/ofxPclStitcherDevice.h"/>
         <File Name="../../../../addons/ofxPclStitcher/src/ofxPclStitcherDevice.cpp"/>
+        <File Name="../../src/ofxPclUtils.h"/>
+        <File Name="../../src/ofxPclUtils.cpp"/>
       </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="ofxXmlSettings">

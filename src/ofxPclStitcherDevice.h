@@ -2,6 +2,7 @@
 #define OFXPCLSTITCHERDEVICE_H
 
 #include <XnCppWrapper.h>
+#include <pcl/io/pcd_io.h>
 #include <pcl/io/openni_grabber.h>
 #include <pcl/point_cloud.h>
 
@@ -27,29 +28,30 @@ public:
 	~ofxPclStitcherDevice();
 
 private:
+	ofxPclStitcherDevice(string address, ofParameter<bool> doColors);
 	void cloudCallbackColor(const ofxPclCloudConstPtrColor cloudIn);
 	void cloudCallback(const ofxPclCloudConstPtr cloudIn);
-	 /*
-	 {
-		//thread safety first
-		mutex.lock();
-		pcl::copyPointCloud(*cloud_, *cloudThread);
-		mutex.unlock();
-	}
-*/
-
-	ofxPclStitcherDevice(string address, bool doColors);
+	void copyCloudFromThread();
+	void processCloud();
 
 	pcl::OpenNIGrabber* interface;
 
 	friend class ofxPclStitcher;
 
-	bool doColors;
-
 	ofMutex mutex;
 
 	ofxPclCloudPtr cloudThread;
 	ofxPclCloudPtrColor cloudThreadColor;
+
+	ofxPclCloudPtr cloud;
+	ofxPclCloudPtrColor cloudColor;
+
+	ofParameterGroup parameters;
+	ofParameter<bool> doColors;
+	ofParameter<float> cropZ;
+
+	ofParameter<bool> downsample;
+	ofParameter<float> downsampleSize;
 };
 
 #endif // OFXPCLSTITCHERDEVICE_H

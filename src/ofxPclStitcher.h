@@ -9,15 +9,24 @@ public:
 	ofxPclStitcher();
 	~ofxPclStitcher();
 
+	void update();
+	void draw();
+
 	void setup(bool autoCreateDevices = true, bool doColors = false);
 	ofxPclStitcherDevice* createDevice(string address);
 	ofxPclStitcherDevice* createDevice(int number);
 	ofxPclStitcherDevice* createDevice();
 
+	ofParameter<bool> downsample;
+	ofParameter<float> downsampleSize;
+	ofParameter<bool> debug;
+
 private:
-	std::vector< ofPtr<ofxPclStitcherDevice> > devices;
+	typedef std::vector< ofPtr<ofxPclStitcherDevice> > DeviceList;
+	DeviceList devices;
 	unsigned int curDeviceNumber;
-	bool doColors;
+	ofParameterGroup parameters;
+	ofParameter<bool> doColors;
 };
 
 #endif // OFXPCLSTITCHER_H

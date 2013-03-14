@@ -1,30 +1,29 @@
 #include "ofxPclStitcherDevice.h"
 
-ofxPclStitcherDevice::ofxPclStitcherDevice(string address, bool dc) {
+ofxPclStitcherDevice::ofxPclStitcherDevice(string address, ofParameter<bool> dc) {
+
+	cropZ.set("CROP Z", 100, 0, 800);
+
+	parameters.add(cropZ);
 
 	doColors = dc;
 
-	try {
+	//TODO: this could be optimized, since we don't need color and non color instantiated at the same time
+	cloud = ofxPclCloudPtr(new ofxPclCloud());
+	cloudThread = ofxPclCloudPtr(new ofxPclCloud());
+	cloudColor = ofxPclCloudPtrColor(new ofxPclCloudColor());
+	cloudThreadColor = ofxPclCloudPtrColor(new ofxPclCloudColor());
 
+	try {
 		interface = new pcl::OpenNIGrabber(address);
 
-
-		if(doColors){
+		if(doColors) {
 			boost::function<void (const ofxPclCloudConstPtrColor&)> f = boost::bind (&ofxPclStitcherDevice::cloudCallbackColor, this, _1);
 			interface->registerCallback(f);
-		}else{
+		} else {
 			boost::function<void (const ofxPclCloudConstPtr&)> f = boost::bind (&ofxPclStitcherDevice::cloudCallback, this, _1);
 			interface->registerCallback(f);
 		}
-
-
-
-		/*
-		if(useCamera) {
-			boost::function<void (const boost::shared_ptr<openni_wrapper::Image>&)> fImg = boost::bind (&KinectWrapper::img_cb_, this, _1);
-			interface->registerCallback(fImg);
-		}
-		*/
 
 		interface->start();
 
@@ -32,18 +31,37 @@ ofxPclStitcherDevice::ofxPclStitcherDevice(string address, bool dc) {
 		ofLogError() << e.detailedMessage() << endl;
 	}
 
-	//ofLog() << "created new kinect with id " << id;
+	ofLog() << "CREATED NEW PCL DEVICE: " << address;
 }
 
 ofxPclStitcherDevice::~ofxPclStitcherDevice() {
 }
 
-void ofxPclStitcherDevice::cloudCallback(const ofxPclCloudConstPtr cloudIn)
-{
-	ofLog() << "CLOUD IN";
+void ofxPclStitcherDevice::cloudCallback(const ofxPclCloudConstPtr cloudIn) {
+	mutex.lock();
+	pcl::copyPointCloud(*cloudIn, *cloudThread);
+	mutex.unlock();
 }
 
-void ofxPclStitcherDevice::cloudCallbackColor(const ofxPclCloudConstPtrColor cloudIn)
+void ofxPclStitcherDevice::cloudCallbackColor(const ofxPclCloudConstPtrColor cloudIn) {
+	mutex.lock();
+	pcl::copyPointCloud(*cloudIn, *cloudThreadColor);
+	mutex.unlock();
+}
+
+void ofxPclStitcherDevice::copyCloudFromThread() {
+	if(doColors){
+		mutex.lock();
+		pcl::copyPointCloud(*cloudThreadColor, *cloudColor);
+		mutex.unlock();
+	}else{
+		mutex.lock();
+		pcl::copyPointCloud(*cloudThread, *cloud);
+		mutex.unlock();
+	}
+}
+
+void ofxPclStitcherDevice::processCloud()
 {
-	ofLog() << "CLOUD IN";
+
 }
