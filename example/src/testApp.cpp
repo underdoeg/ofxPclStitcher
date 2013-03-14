@@ -2,7 +2,7 @@
 
 //--------------------------------------------------------------
 void testApp::setup(){
-	stitcher.setup();
+	stitcher.setup(true, true);
 }
 
 //--------------------------------------------------------------
@@ -12,7 +12,11 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
+	cam.begin();
+	ofEnableAlphaBlending();
+	glEnable(GL_DEPTH_TEST);
 	stitcher.draw();
+	cam.end();
 }
 
 //--------------------------------------------------------------

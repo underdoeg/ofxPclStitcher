@@ -1,4 +1,5 @@
 #include "ofxPclStitcherDevice.h"
+#include "ofxPclUtils.h"
 
 ofxPclStitcherDevice::ofxPclStitcherDevice(string address, ofParameter<bool> dc) {
 
@@ -35,6 +36,7 @@ ofxPclStitcherDevice::ofxPclStitcherDevice(string address, ofParameter<bool> dc)
 }
 
 ofxPclStitcherDevice::~ofxPclStitcherDevice() {
+	interface->stop();
 }
 
 void ofxPclStitcherDevice::cloudCallback(const ofxPclCloudConstPtr cloudIn) {
@@ -63,5 +65,9 @@ void ofxPclStitcherDevice::copyCloudFromThread() {
 
 void ofxPclStitcherDevice::processCloud()
 {
-
+	if(doColors){
+		toOf(cloudColor, mesh, scale, scale, scale);
+	}else{
+		toOf(cloud, mesh, scale, scale, scale);
+	}
 }

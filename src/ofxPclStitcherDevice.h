@@ -46,12 +46,16 @@ private:
 	ofxPclCloudPtr cloud;
 	ofxPclCloudPtrColor cloudColor;
 
+	ofMesh mesh;
+
 	ofParameterGroup parameters;
 	ofParameter<bool> doColors;
 	ofParameter<float> cropZ;
 
 	ofParameter<bool> downsample;
 	ofParameter<float> downsampleSize;
+	ofParameter<float> scale;
+	ofParameter<bool> debug;
 };
 
 #endif // OFXPCLSTITCHERDEVICE_H

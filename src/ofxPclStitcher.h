@@ -20,6 +20,7 @@ public:
 	ofParameter<bool> downsample;
 	ofParameter<float> downsampleSize;
 	ofParameter<bool> debug;
+	ofParameter<float> scale;
 
 private:
 	typedef std::vector< ofPtr<ofxPclStitcherDevice> > DeviceList;
