@@ -4,6 +4,7 @@
 void testApp::setup(){
 
 	stitcher.setup(true, false);
+	stitcher.debug = true;
 }
 
 //--------------------------------------------------------------
@@ -14,10 +15,7 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 	ofBackground(0);
-
-	cam.begin();
 	stitcher.draw();
-	cam.end();
 }
 
 //--------------------------------------------------------------

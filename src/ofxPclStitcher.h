@@ -2,6 +2,7 @@
 #define OFXPCLSTITCHER_H
 
 #include "ofxPclStitcherDevice.h"
+#include "ofxGui.h"
 
 class ofxPclStitcher
 {
@@ -30,6 +31,10 @@ private:
 	unsigned int curDeviceNumber;
 	ofParameterGroup parameters;
 	ofParameter<bool> doColors;
+	ofEasyCam cam;
+
+	ofxPanel gui;
+
 };
 
 #endif // OFXPCLSTITCHER_H

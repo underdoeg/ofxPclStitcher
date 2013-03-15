@@ -1,4 +1,6 @@
 #include "ofxPclStitcherDevice.h"
+#include <pcl/common/transforms.h>
+
 #include "ofxPclUtils.h"
 
 int ofxPclStitcherDevice::curId = 0;
@@ -24,6 +26,7 @@ ofxPclStitcherDevice::ofxPclStitcherDevice(string address, ofParameter<bool> dc)
 	rotationY.set("ROTATION Y", 0, minRot, maxRot);
 	rotationZ.set("ROTATION Z", 0, minRot, maxRot);
 
+	parameters.setName("PCL DEVICE "+ofToString(id));
 	parameters.add(cropZ);
 	parameters.add(translateX);
 	parameters.add(translateY);
@@ -89,6 +92,35 @@ void ofxPclStitcherDevice::copyCloudFromThread() {
 }
 
 void ofxPclStitcherDevice::processCloud() {
+
+	//Z filtering
+	if(doColors){
+		passThroughColor.setFilterFieldName ("z");
+		passThroughColor.filter (*cloudColor);
+		passThroughColor.setFilterLimits (0.0, cropZ/scale);
+		passThroughColor.setInputCloud (cloudColor);
+	}else{
+		passThrough.setFilterFieldName ("z");
+		passThrough.filter (*cloud);
+		passThrough.setFilterLimits (0.0, cropZ/scale);
+		passThrough.setInputCloud (cloud);
+	}
+	
+
+
+	//do downsampling
+
+	//apply matrix transforms
+	ofMatrix4x4 matrix;
+	matrix.translate(translateX, translateY, translateZ);
+	//TODO: rotation
+	matrix.scale(1, -1, 1);
+
+	if(doColors)
+		pcl::transformPointCloud(*cloudColor, *cloudColor, toEigen(matrix));
+	else
+		pcl::transformPointCloud(*cloud, *cloud, toEigen(matrix));
+
 	if(debug) {
 		if(doColors) {
 			toOf(cloudColor, mesh, scale, scale, scale, true, color);
@@ -101,5 +133,10 @@ void ofxPclStitcherDevice::processCloud() {
 void ofxPclStitcherDevice::draw() {
 	if(debug) {
 		mesh.draw();
+	}
+}
+
+void ofxPclStitcherDevice::drawOverlay() {
+	if(debug) {
 	}
 }

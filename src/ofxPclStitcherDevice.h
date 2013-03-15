@@ -5,8 +5,13 @@
 #include <pcl/io/pcd_io.h>
 #include <pcl/io/openni_grabber.h>
 #include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
+
+#include <pcl/filters/approximate_voxel_grid.h>
+#include <pcl/filters/passthrough.h>
 
 #include "ofMain.h"
+#include "ofxGui.h"
 
 class ofxPclStitcher;
 
@@ -36,6 +41,7 @@ private:
 	void copyCloudFromThread();
 	void processCloud();
 	void draw();
+	void drawOverlay();
 
 	pcl::OpenNIGrabber* interface;
 
@@ -54,6 +60,12 @@ private:
 	ofColor color;
 	ofMesh mesh;
 
+	//pcl filters
+	pcl::PassThrough<ofxPclPoint> passThrough;
+	pcl::PassThrough<ofxPclPointColor> passThroughColor;
+
+
+	//PARAMETERS
 	ofParameterGroup parameters;
 	ofParameter<bool> doColors;
 	ofParameter<float> cropZ;
