@@ -74,7 +74,16 @@ void ofxPclStitcher::update()
 
 void ofxPclStitcher::draw()
 {
+	ofPushStyle();
+	glEnable(GL_DEPTH_TEST);
+	ofEnableAlphaBlending();
 	for(DeviceList::iterator it = devices.begin();it != devices.end();it++){
-		(*it)->mesh.draw();
+		(*it)->draw();
 	}
+	ofPopStyle();
+}
+
+void ofxPclStitcher::toggleDebug()
+{
+	debug != debug;
 }

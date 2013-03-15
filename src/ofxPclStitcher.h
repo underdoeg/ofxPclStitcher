@@ -17,6 +17,8 @@ public:
 	ofxPclStitcherDevice* createDevice(int number);
 	ofxPclStitcherDevice* createDevice();
 
+	void toggleDebug();
+
 	ofParameter<bool> downsample;
 	ofParameter<float> downsampleSize;
 	ofParameter<bool> debug;

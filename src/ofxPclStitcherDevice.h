@@ -27,12 +27,15 @@ class ofxPclStitcherDevice {
 public:
 	~ofxPclStitcherDevice();
 
+	int id;
+
 private:
 	ofxPclStitcherDevice(string address, ofParameter<bool> doColors);
 	void cloudCallbackColor(const ofxPclCloudConstPtrColor cloudIn);
 	void cloudCallback(const ofxPclCloudConstPtr cloudIn);
 	void copyCloudFromThread();
 	void processCloud();
+	void draw();
 
 	pcl::OpenNIGrabber* interface;
 
@@ -46,11 +49,22 @@ private:
 	ofxPclCloudPtr cloud;
 	ofxPclCloudPtrColor cloudColor;
 
+	static int curId;
+
+	ofColor color;
 	ofMesh mesh;
 
 	ofParameterGroup parameters;
 	ofParameter<bool> doColors;
 	ofParameter<float> cropZ;
+
+	ofParameter<float> translateX;
+	ofParameter<float> translateY;
+	ofParameter<float> translateZ;
+
+	ofParameter<float> rotationX;
+	ofParameter<float> rotationY;
+	ofParameter<float> rotationZ;
 
 	ofParameter<bool> downsample;
 	ofParameter<float> downsampleSize;

@@ -2,7 +2,8 @@
 
 //--------------------------------------------------------------
 void testApp::setup(){
-	stitcher.setup(true, true);
+
+	stitcher.setup(true, false);
 }
 
 //--------------------------------------------------------------
@@ -12,9 +13,9 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
+	ofBackground(0);
+
 	cam.begin();
-	ofEnableAlphaBlending();
-	glEnable(GL_DEPTH_TEST);
 	stitcher.draw();
 	cam.end();
 }
@@ -26,7 +27,8 @@ void testApp::keyPressed(int key){
 
 //--------------------------------------------------------------
 void testApp::keyReleased(int key){
-
+	if(key == 'd')
+		stitcher.toggleDebug();
 }
 
 //--------------------------------------------------------------
