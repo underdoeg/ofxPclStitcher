@@ -12,12 +12,15 @@ void ofxPclStitcher::setup(bool autoCreateDevices, bool dc) {
 
 	doColors = dc;
 	downsample.set("DOWNSAMPLE", true);
-	downsampleSize.set("DOWNSAMPLE SIZE", .3, 0.001, 3);
-	scale.set("SCALE", 200, 0.1, 1000);
+	downsampleSize.set("DOWNSAMPLE SIZE", .3, 0.001, .1);
+	scale.set("SCALE", 100, 0.1, 1000);
 
-	gui.setup("PCL STITCHER SETTINGS", "pclStitcherSettings.xml");
+	settingsFilename = "pclStitcherSettings.xml";
+
+	gui.setup("PCL STITCHER SETTINGS", settingsFilename);
 	gui.add(downsample);
 	gui.add(downsampleSize);
+	gui.loadFromFile(settingsFilename);
 
 	if(autoCreateDevices) {
 		unsigned int numDevices = 0;
@@ -65,6 +68,7 @@ ofxPclStitcherDevice* ofxPclStitcher::createDevice(string address)
 	device->scale.makeReferenceTo(scale);
 	device->debug.makeReferenceTo(debug);
 	gui.add(device->parameters);
+	gui.loadFromFile(settingsFilename);
 	devices.push_back(ofPtr<ofxPclStitcherDevice>(device));
 	return device;
 }
@@ -84,14 +88,14 @@ void ofxPclStitcher::update()
 void ofxPclStitcher::draw()
 {
 	ofPushStyle();
-	glEnable(GL_DEPTH_TEST);
 	cam.begin();
+	glEnable(GL_DEPTH_TEST);
+	ofEnableAlphaBlending();
 	for(DeviceList::iterator it = devices.begin();it != devices.end();it++){
 		(*it)->draw();
 	}
 	cam.end();
 	glDisable(GL_DEPTH_TEST);
-	ofEnableAlphaBlending();
 	gui.draw();
 	for(DeviceList::iterator it = devices.begin();it != devices.end();it++){
 		(*it)->drawOverlay();

@@ -14,8 +14,8 @@ ofxPclStitcherDevice::ofxPclStitcherDevice(string address, ofParameter<bool> dc)
 
 	cropZ.set("CROP Z", 100, 0, 800);
 
-	float minTrans = -500;
-	float maxTrans = 500;
+	float minTrans = -50;
+	float maxTrans = minTrans*-1;;
 	translateX.set("TRANSLATE X", 0, minTrans, maxTrans);
 	translateY.set("TRANSLATE Y", 0, minTrans, maxTrans);
 	translateZ.set("TRANSLATE Z", 0, minTrans, maxTrans);
@@ -109,10 +109,21 @@ void ofxPclStitcherDevice::processCloud() {
 
 
 	//do downsampling
+	if(downsample){
+		if(doColors){
+			gridColor.setLeafSize(downsampleSize, downsampleSize, downsampleSize);
+			gridColor.setInputCloud(cloudColor);
+			gridColor.filter(*cloudColor);
+		}else{
+			grid.setLeafSize(downsampleSize, downsampleSize, downsampleSize);
+			grid.setInputCloud(cloud);
+			grid.filter(*cloud);
+		}
+	}
 
 	//apply matrix transforms
 	ofMatrix4x4 matrix;
-	matrix.translate(translateX, translateY, translateZ);
+	matrix.translate(translateX/scale, translateY/scale, translateZ/scale);
 	//TODO: rotation
 	matrix.scale(1, -1, 1);
 
@@ -123,7 +134,7 @@ void ofxPclStitcherDevice::processCloud() {
 
 	if(debug) {
 		if(doColors) {
-			toOf(cloudColor, mesh, scale, scale, scale, true, color);
+			toOf(cloudColor, mesh, scale, scale, scale, false, color);
 		} else {
 			toOf(cloud, mesh, scale, scale, scale, color);
 		}
@@ -132,6 +143,7 @@ void ofxPclStitcherDevice::processCloud() {
 
 void ofxPclStitcherDevice::draw() {
 	if(debug) {
+		ofSetColor(color);
 		mesh.draw();
 	}
 }

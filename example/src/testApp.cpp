@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void testApp::setup(){
 
-	stitcher.setup(true, false);
+	stitcher.setup(true, true);
 	stitcher.debug = true;
 }
 

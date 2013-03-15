@@ -64,6 +64,9 @@ private:
 	pcl::PassThrough<ofxPclPoint> passThrough;
 	pcl::PassThrough<ofxPclPointColor> passThroughColor;
 
+	pcl::ApproximateVoxelGrid<ofxPclPoint> grid;
+	pcl::ApproximateVoxelGrid<ofxPclPointColor> gridColor;
+
 
 	//PARAMETERS
 	ofParameterGroup parameters;

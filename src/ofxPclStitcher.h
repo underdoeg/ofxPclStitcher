@@ -33,6 +33,8 @@ private:
 	ofParameter<bool> doColors;
 	ofEasyCam cam;
 
+	string settingsFilename;
+
 	ofxPanel gui;
 
 };
