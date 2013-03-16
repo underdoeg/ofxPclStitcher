@@ -60,6 +60,7 @@ void toOf(ofxPclCloudPtr& cloud, ofMesh & mesh, float xfactor, float yfactor, fl
 }
 
 void toOf(ofxPclCloudPtrColor& cloud, ofMesh & mesh, float xfactor, float yfactor, float zfactor, bool overrideColor, ofColor color) {
+	mesh.clear();
 	mesh.setMode(OF_PRIMITIVE_POINTS);
 	mesh.getVertices().resize(cloud->points.size());
 	mesh.getColors().resize(cloud->points.size());

@@ -1,8 +1,10 @@
 #ifndef OFXPCLSTITCHER_H
 #define OFXPCLSTITCHER_H
 
+#include <pcl/surface/concave_hull.h>
 #include "ofxPclStitcherDevice.h"
 #include "ofxGui.h"
+
 
 class ofxPclStitcher
 {
@@ -20,10 +22,13 @@ public:
 
 	void toggleDebug();
 
-	ofParameter<bool> downsample;
+	ofParameter<bool> doDownsample;
 	ofParameter<float> downsampleSize;
-	ofParameter<bool> debug;
-	ofParameter<float> scale;
+	ofParameter<bool> doCalibrate;
+	ofParameter<float> doScale;
+	ofParameter<float> concaveHullSize;
+
+	ofMesh mesh;
 
 private:
 	typedef std::vector< ofPtr<ofxPclStitcherDevice> > DeviceList;
@@ -33,10 +38,20 @@ private:
 	ofParameter<bool> doColors;
 	ofEasyCam cam;
 
+	ofxPclCloudPtr cloud;
+	ofxPclCloudPtrColor cloudColor;
+
+	pcl::ApproximateVoxelGrid<ofxPclPoint> grid;
+	pcl::ApproximateVoxelGrid<ofxPclPointColor> gridColor;
+
+	pcl::ConcaveHull<ofxPclPoint> concaveHull;
+	pcl::ConcaveHull<ofxPclPointColor> concaveHullColor;
+
 	string settingsFilename;
 
-	ofxPanel gui;
+	ofParameter<bool> doConcaveHull;
 
+	ofxPanel gui;
 };
 
 #endif // OFXPCLSTITCHER_H

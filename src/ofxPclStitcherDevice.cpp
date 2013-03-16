@@ -134,7 +134,7 @@ void ofxPclStitcherDevice::processCloud() {
 
 	if(debug) {
 		if(doColors) {
-			toOf(cloudColor, mesh, scale, scale, scale, false, color);
+			toOf(cloudColor, mesh, scale, scale, scale, true, color);
 		} else {
 			toOf(cloud, mesh, scale, scale, scale, color);
 		}

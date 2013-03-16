@@ -3,8 +3,11 @@
 //--------------------------------------------------------------
 void testApp::setup(){
 
-	stitcher.setup(true, true);
-	stitcher.debug = true;
+	stitcher.setup(true, false);
+	stitcher.doCalibrate = true;
+
+	toggleCalibrate.setup(stitcher.doCalibrate);
+	toggleCalibrate.setPosition(10, 10);
 }
 
 //--------------------------------------------------------------
@@ -16,6 +19,9 @@ void testApp::update(){
 void testApp::draw(){
 	ofBackground(0);
 	stitcher.draw();
+
+	ofSetColor(255);
+	toggleCalibrate.draw();
 }
 
 //--------------------------------------------------------------
