@@ -20,17 +20,25 @@ void ofxPclStitcher::setup(bool autoCreateDevices, bool dc) {
 	doConcaveHull.set("CONCAVE HULL", false);
 	concaveHullSize.set("CONCAVE HULL SIZE", .1, .0001, .5);
 
+	doTriangulation.set("TRIANGULATION", false);
+	triangulationRadius.set("TRIANGULATION RADIUS", .03, .0001, .5);
+
 	settingsFilename = "pclStitcherSettings.xml";
 
 	gui.setup("PCL STITCHER SETTINGS", settingsFilename);
 	gui.add(doDownsample);
 	gui.add(downsampleSize);
+	gui.add(doTriangulation);
+	gui.add(triangulationRadius);
 	//gui.add(doConcaveHull);
 	gui.loadFromFile(settingsFilename);
 	gui.setPosition(10, 40);
 
 	cloud = ofxPclCloudPtr(new ofxPclCloud());
 	cloudColor = ofxPclCloudPtrColor(new ofxPclCloudColor());
+	normals =  pcl::PointCloud<pcl::Normal>::Ptr(new pcl::PointCloud<pcl::Normal>);
+
+//	searchTree = pcl::search::KdTree<ofxPclPoint>::Ptr(new pcl::search::kdTree<ofxPclPoint>);
 
 	if(autoCreateDevices) {
 		unsigned int numDevices = 0;

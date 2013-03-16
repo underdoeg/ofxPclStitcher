@@ -2,9 +2,12 @@
 #define OFXPCLSTITCHER_H
 
 #include <pcl/surface/concave_hull.h>
-#include "ofxPclStitcherDevice.h"
-#include "ofxGui.h"
+#include <pcl/features/normal_3d.h>
+#include <pcl/kdtree/kdtree_flann.h>
 
+#include "ofxPclStitcherDevice.h"
+
+#include "ofxGui.h"
 
 class ofxPclStitcher
 {
@@ -27,6 +30,8 @@ public:
 	ofParameter<bool> doCalibrate;
 	ofParameter<float> doScale;
 	ofParameter<float> concaveHullSize;
+	ofParameter<bool> doTriangulation;
+	ofParameter<float> triangulationRadius;
 
 	ofMesh mesh;
 
@@ -46,6 +51,15 @@ private:
 
 	pcl::ConcaveHull<ofxPclPoint> concaveHull;
 	pcl::ConcaveHull<ofxPclPointColor> concaveHullColor;
+
+	pcl::NormalEstimation<ofxPclPoint, pcl::Normal> normalEstimation;
+	pcl::NormalEstimation<ofxPclPointColor, pcl::Normal> normalEstimationColor;
+
+	pcl::search::KdTree<ofxPclPoint>::Ptr searchTree;
+	pcl::search::KdTree<ofxPclPointColor>::Ptr searchTreeColor;
+
+
+	pcl::PointCloud<pcl::Normal>::Ptr normals;
 
 	string settingsFilename;
 
