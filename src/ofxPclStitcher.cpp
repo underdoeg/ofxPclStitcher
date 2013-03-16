@@ -38,7 +38,8 @@ void ofxPclStitcher::setup(bool autoCreateDevices, bool dc) {
 	cloudColor = ofxPclCloudPtrColor(new ofxPclCloudColor());
 	normals =  pcl::PointCloud<pcl::Normal>::Ptr(new pcl::PointCloud<pcl::Normal>);
 
-//	searchTree = pcl::search::KdTree<ofxPclPoint>::Ptr(new pcl::search::kdTree<ofxPclPoint>);
+	searchTree = pcl::search::KdTree<ofxPclPoint>::Ptr(new pcl::search::KdTree<ofxPclPoint>);
+	searchTreeColor = pcl::search::KdTree<ofxPclPointColor>::Ptr(new pcl::search::KdTree<ofxPclPointColor>);
 
 	if(autoCreateDevices) {
 		unsigned int numDevices = 0;
@@ -124,7 +125,7 @@ void ofxPclStitcher::update() {
 		}
 
 		//construct the concave hull
-		if(doConcaveHull){
+		if(doConcaveHull) {
 			if(doColors) {
 				concaveHullColor.setInputCloud(cloudColor);
 				concaveHullColor.setAlpha(concaveHullSize);
@@ -136,6 +137,16 @@ void ofxPclStitcher::update() {
 			}
 		}
 
+		if(doTriangulation) {
+			//first calculate normals
+			//TODO: maybe some of those will also work in setup()
+			normals->clear();
+			searchTree->setInputCloud(cloud);
+			normalEstimation.setInputCloud(cloud);
+			normalEstimation.setSearchMethod(searchTree);
+			normalEstimation.setKSearch(20);
+			normalEstimation.compute(*normals);
+		}
 
 		if(doColors) {
 			toOf(cloudColor, mesh, doScale, doScale, doScale);
