@@ -93,3 +93,13 @@ void toOf(ofxPclCloudPtrColor& cloud, ofMesh & mesh, float xfactor, float yfacto
 		}
 	}
 }
+
+void addIndices(ofMesh & mesh, pcl::PolygonMesh& triangles) {
+	mesh.getIndices().clear();
+	mesh.setMode(OF_PRIMITIVE_TRIANGLES);
+	for(int i=0; i<triangles.polygons.size(); i++) {
+		for(int j=0; j<triangles.polygons[i].vertices.size(); j++) {
+			mesh.addIndex(triangles.polygons[i].vertices[j]);
+		}
+	}
+}

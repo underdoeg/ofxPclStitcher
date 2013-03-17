@@ -94,27 +94,27 @@ void ofxPclStitcherDevice::copyCloudFromThread() {
 void ofxPclStitcherDevice::processCloud() {
 
 	//Z filtering
-	if(doColors){
+	if(doColors) {
 		passThroughColor.setFilterFieldName ("z");
 		passThroughColor.filter (*cloudColor);
 		passThroughColor.setFilterLimits (0.0, cropZ/scale);
 		passThroughColor.setInputCloud (cloudColor);
-	}else{
+	} else {
 		passThrough.setFilterFieldName ("z");
 		passThrough.filter (*cloud);
 		passThrough.setFilterLimits (0.0, cropZ/scale);
 		passThrough.setInputCloud (cloud);
 	}
-	
+
 
 
 	//do downsampling
-	if(downsample){
-		if(doColors){
+	if(downsample) {
+		if(doColors) {
 			gridColor.setLeafSize(downsampleSize, downsampleSize, downsampleSize);
 			gridColor.setInputCloud(cloudColor);
 			gridColor.filter(*cloudColor);
-		}else{
+		} else {
 			grid.setLeafSize(downsampleSize, downsampleSize, downsampleSize);
 			grid.setInputCloud(cloud);
 			grid.filter(*cloud);
@@ -124,8 +124,13 @@ void ofxPclStitcherDevice::processCloud() {
 	//apply matrix transforms
 	ofMatrix4x4 matrix;
 	matrix.translate(translateX/scale, translateY/scale, translateZ/scale);
+	matrix.rotate(rotationX, 1, 0, 0);
+	matrix.rotate(rotationY, 0, 1, 0);
+	matrix.rotate(rotationZ, 0, 0, 1);
+	matrix.scale(-1, -1, 1);
+
 	//TODO: rotation
-	matrix.scale(1, -1, 1);
+	//matrix.scale(1, -1, -1);
 
 	if(doColors)
 		pcl::transformPointCloud(*cloudColor, *cloudColor, toEigen(matrix));

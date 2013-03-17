@@ -11,6 +11,7 @@ ofxPclStitcher::~ofxPclStitcher() {
 void ofxPclStitcher::setup(bool autoCreateDevices, bool dc) {
 
 	doCalibrate.set("CALIBRATE", false);
+	doNoiseReduction.set("NOISE REDUCTION", false);
 
 	doColors = dc;
 	doDownsample.set("DOWNSAMPLE", true);
@@ -21,18 +22,22 @@ void ofxPclStitcher::setup(bool autoCreateDevices, bool dc) {
 	concaveHullSize.set("CONCAVE HULL SIZE", .1, .0001, .5);
 
 	doTriangulation.set("TRIANGULATION", false);
-	triangulationRadius.set("TRIANGULATION RADIUS", .03, .0001, .5);
+	triangulationRadius.set("TRIANGULATION RADIUS", .03, .0001, 3);
 
 	settingsFilename = "pclStitcherSettings.xml";
 
+	guiWidth = 350;
 	gui.setup("PCL STITCHER SETTINGS", settingsFilename);
+	gui.setSize(guiWidth, gui.getHeight());
 	gui.add(doDownsample);
 	gui.add(downsampleSize);
-	gui.add(doTriangulation);
-	gui.add(triangulationRadius);
+	gui.add(doNoiseReduction);
+	//gui.add(doTriangulation);
+	//gui.add(triangulationRadius);
 	//gui.add(doConcaveHull);
 	gui.loadFromFile(settingsFilename);
 	gui.setPosition(10, 40);
+	gui.setWidthElements(guiWidth);
 
 	cloud = ofxPclCloudPtr(new ofxPclCloud());
 	cloudColor = ofxPclCloudPtrColor(new ofxPclCloudColor());
@@ -86,6 +91,9 @@ ofxPclStitcherDevice* ofxPclStitcher::createDevice(string address) {
 	gui.add(device->parameters);
 	gui.loadFromFile(settingsFilename);
 	devices.push_back(ofPtr<ofxPclStitcherDevice>(device));
+
+	gui.setWidthElements(guiWidth);
+
 	return device;
 }
 
@@ -137,6 +145,23 @@ void ofxPclStitcher::update() {
 			}
 		}
 
+		if(doNoiseReduction) {
+			pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ>);
+
+			pcl::PointCloud<pcl::PointNormal> mls_points;
+
+
+			//mls.setComputeNormals(true);
+			mls.setInputCloud (cloud);
+			mls.setPolynomialFit (true);
+			mls.setSearchMethod (tree);
+			mls.setSearchRadius (0.03);
+
+			mls.process(mls_points);
+
+			pcl::copyPointCloud(mls_points, *cloud);
+		}
+
 		if(doTriangulation) {
 			//first calculate normals
 			//TODO: maybe some of those will also work in setup()
@@ -146,13 +171,41 @@ void ofxPclStitcher::update() {
 			normalEstimation.setSearchMethod(searchTree);
 			normalEstimation.setKSearch(20);
 			normalEstimation.compute(*normals);
+
+			pcl::PointCloud<pcl::PointNormal>::Ptr cloudWithNormals (new pcl::PointCloud<pcl::PointNormal>);
+			pcl::concatenateFields(*cloud, *normals, *cloudWithNormals);
+
+			// Create search tree*
+			pcl::search::KdTree<pcl::PointNormal>::Ptr tree (new pcl::search::KdTree<pcl::PointNormal>);
+			tree->setInputCloud (cloudWithNormals);
+
+			gp3.setSearchRadius(triangulationRadius);
+
+			// Set typical values for the parameters
+			gp3.setMu (2.5);
+			gp3.setMaximumNearestNeighbors (100);
+			gp3.setMaximumSurfaceAngle(M_PI/4); // 45 degrees
+			gp3.setMinimumAngle(M_PI/18); // 10 degrees
+			gp3.setMaximumAngle(2*M_PI/3); // 120 degrees
+			gp3.setNormalConsistency(false);
+
+			//get the tris
+			gp3.setInputCloud(cloudWithNormals);
+			gp3.setSearchMethod (tree);
+			gp3.reconstruct(polygonMesh);
 		}
+
 
 		if(doColors) {
 			toOf(cloudColor, mesh, doScale, doScale, doScale);
+			if(doTriangulation)
+				addIndices(mesh, polygonMesh);
 		} else {
 			toOf(cloud, mesh, doScale, doScale, doScale);
+			if(doTriangulation)
+				addIndices(mesh, polygonMesh);
 		}
+
 
 	}
 

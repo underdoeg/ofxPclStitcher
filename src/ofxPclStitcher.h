@@ -4,6 +4,9 @@
 #include <pcl/surface/concave_hull.h>
 #include <pcl/features/normal_3d.h>
 #include <pcl/kdtree/kdtree_flann.h>
+#include <pcl/surface/gp3.h>
+#include <pcl/surface/mls.h>
+
 
 #include "ofxPclStitcherDevice.h"
 
@@ -32,6 +35,7 @@ public:
 	ofParameter<float> concaveHullSize;
 	ofParameter<bool> doTriangulation;
 	ofParameter<float> triangulationRadius;
+	ofParameter<bool> doNoiseReduction;
 
 	ofMesh mesh;
 
@@ -58,6 +62,11 @@ private:
 	pcl::search::KdTree<ofxPclPoint>::Ptr searchTree;
 	pcl::search::KdTree<ofxPclPointColor>::Ptr searchTreeColor;
 
+	pcl::MovingLeastSquares<pcl::PointXYZ, pcl::PointNormal> mls;
+
+
+	pcl::GreedyProjectionTriangulation<pcl::PointNormal> gp3;
+	pcl::PolygonMesh polygonMesh;
 
 	pcl::PointCloud<pcl::Normal>::Ptr normals;
 
@@ -66,6 +75,7 @@ private:
 	ofParameter<bool> doConcaveHull;
 
 	ofxPanel gui;
+	int guiWidth;
 };
 
 #endif // OFXPCLSTITCHER_H
