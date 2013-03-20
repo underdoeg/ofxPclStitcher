@@ -132,10 +132,16 @@ void ofxPclStitcherDevice::processCloud() {
 	//TODO: rotation
 	//matrix.scale(1, -1, -1);
 
+	Eigen::Matrix4f eigenMat;
+	eigenMat << matrix(0,0), matrix(1,0), matrix(2,0), matrix(3,0),
+	    matrix(0,1), matrix(1,1), matrix(2,1), matrix(3,1),
+	    matrix(0,2), matrix(1,2), matrix(2,2), matrix(3,2),
+	    matrix(0,3), matrix(1,3), matrix(2,3), matrix(3,3);
+
 	if(doColors)
-		pcl::transformPointCloud(*cloudColor, *cloudColor, toEigen(matrix));
+		pcl::transformPointCloud(*cloudColor, *cloudColor, eigenMat);
 	else
-		pcl::transformPointCloud(*cloud, *cloud, toEigen(matrix));
+		pcl::transformPointCloud(*cloud, *cloud, eigenMat);
 
 	if(debug) {
 		if(doColors) {

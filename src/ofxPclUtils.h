@@ -8,8 +8,8 @@
 ofColor getColorForId(int id);
 
 //EIGEN UTILS
-Eigen::Matrix4f toEigen(ofMatrix4x4 m);
-ofVec4f toOf(const Eigen::Vector4f& vec);
+
+//ofVec4f toOf(const Eigen::Vector4f& vec);
 
 //PCL UTILS
 void toOf(ofxPclCloudPtr & cloud, ofMesh & mesh, float xfactor, float yfactor, float zfactor, ofColor color=ofColor::white);

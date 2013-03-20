@@ -2,7 +2,7 @@
 
 //--------------------------------------------------------------
 void testApp::setup(){
-
+	
 	stitcher.setup(true, false);
 	stitcher.doCalibrate = true;
 

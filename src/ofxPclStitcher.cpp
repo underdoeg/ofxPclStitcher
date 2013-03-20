@@ -162,6 +162,7 @@ void ofxPclStitcher::update() {
 			pcl::copyPointCloud(mls_points, *cloud);
 		}
 
+		/*
 		if(doTriangulation) {
 			//first calculate normals
 			//TODO: maybe some of those will also work in setup()
@@ -194,16 +195,16 @@ void ofxPclStitcher::update() {
 			gp3.setSearchMethod (tree);
 			gp3.reconstruct(polygonMesh);
 		}
-
+		*/
 
 		if(doColors) {
 			toOf(cloudColor, mesh, doScale, doScale, doScale);
-			if(doTriangulation)
-				addIndices(mesh, polygonMesh);
+			//if(doTriangulation)
+			//	addIndices(mesh, polygonMesh);
 		} else {
 			toOf(cloud, mesh, doScale, doScale, doScale);
-			if(doTriangulation)
-				addIndices(mesh, polygonMesh);
+			//if(doTriangulation)
+			//	addIndices(mesh, polygonMesh);
 		}
 
 

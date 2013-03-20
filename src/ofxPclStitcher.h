@@ -56,8 +56,8 @@ private:
 	pcl::ConcaveHull<ofxPclPoint> concaveHull;
 	pcl::ConcaveHull<ofxPclPointColor> concaveHullColor;
 
-	pcl::NormalEstimation<ofxPclPoint, pcl::Normal> normalEstimation;
-	pcl::NormalEstimation<ofxPclPointColor, pcl::Normal> normalEstimationColor;
+	//pcl::NormalEstimation<ofxPclPoint, pcl::Normal> normalEstimation;
+	//pcl::NormalEstimation<ofxPclPointColor, pcl::Normal> normalEstimationColor;
 
 	pcl::search::KdTree<ofxPclPoint>::Ptr searchTree;
 	pcl::search::KdTree<ofxPclPointColor>::Ptr searchTreeColor;
@@ -65,8 +65,8 @@ private:
 	pcl::MovingLeastSquares<pcl::PointXYZ, pcl::PointNormal> mls;
 
 
-	pcl::GreedyProjectionTriangulation<pcl::PointNormal> gp3;
-	pcl::PolygonMesh polygonMesh;
+	//pcl::GreedyProjectionTriangulation<pcl::PointNormal> gp3;
+	//pcl::PolygonMesh polygonMesh;
 
 	pcl::PointCloud<pcl::Normal>::Ptr normals;
 
