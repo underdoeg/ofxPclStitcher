@@ -27,6 +27,19 @@ typedef ofxPclCloudColor::Ptr ofxPclCloudPtrColor;
 typedef ofxPclCloud::ConstPtr ofxPclCloudConstPtr;
 typedef ofxPclCloudColor::ConstPtr ofxPclCloudConstPtrColor;
 
+class ofxPclStitcherDeviceNode: public ofNode
+{
+public:
+	void customDraw() {
+		ofNode::customDraw();
+		float depth = 100;
+		float spread = 50;
+		ofLine(0, 0, 0, -spread, -spread, depth);
+		ofLine(0, 0, 0, -spread, spread, depth);
+		ofLine(0, 0, 0, spread, -spread, depth);
+		ofLine(0, 0, 0, spread, spread, depth);
+	}
+};
 
 class ofxPclStitcherDevice {
 public:
@@ -67,6 +80,7 @@ private:
 	pcl::ApproximateVoxelGrid<ofxPclPoint> grid;
 	pcl::ApproximateVoxelGrid<ofxPclPointColor> gridColor;
 
+	ofxPclStitcherDeviceNode dNode;
 
 	//PARAMETERS
 	ofParameterGroup parameters;

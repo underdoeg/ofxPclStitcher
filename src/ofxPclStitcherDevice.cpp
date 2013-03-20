@@ -129,6 +129,16 @@ void ofxPclStitcherDevice::processCloud() {
 	matrix.rotate(rotationZ, 0, 0, 1);
 	matrix.scale(-1, -1, 1);
 
+	if(debug) {
+		ofMatrix4x4 matrixDebug;
+		matrixDebug.translate(translateX, translateY, translateZ);
+		matrixDebug.rotate(rotationX, 1, 0, 0);
+		matrixDebug.rotate(rotationY, 0, 1, 0);
+		matrixDebug.rotate(rotationZ, 0, 0, 1);
+		matrixDebug.scale(-1, -1, 1);
+		dNode.setTransformMatrix(matrixDebug);
+	}
+
 	//TODO: rotation
 	//matrix.scale(1, -1, -1);
 
@@ -150,6 +160,7 @@ void ofxPclStitcherDevice::draw() {
 	if(debug) {
 		ofSetColor(color);
 		mesh.draw();
+		dNode.draw();
 	}
 }
 

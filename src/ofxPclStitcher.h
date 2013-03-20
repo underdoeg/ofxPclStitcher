@@ -62,7 +62,6 @@ private:
 	pcl::search::KdTree<ofxPclPoint>::Ptr searchTree;
 	pcl::search::KdTree<ofxPclPointColor>::Ptr searchTreeColor;
 
-	pcl::MovingLeastSquares<pcl::PointXYZ, pcl::PointNormal> mls;
 
 
 	pcl::GreedyProjectionTriangulation<pcl::PointNormal> gp3;

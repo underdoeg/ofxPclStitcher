@@ -150,6 +150,7 @@ void ofxPclStitcher::update() {
 
 			pcl::PointCloud<pcl::PointNormal> mls_points;
 
+			pcl::MovingLeastSquares<pcl::PointXYZ, pcl::PointNormal> mls;
 
 			//mls.setComputeNormals(true);
 			mls.setInputCloud (cloud);
@@ -194,7 +195,6 @@ void ofxPclStitcher::update() {
 			gp3.setSearchMethod (tree);
 			gp3.reconstruct(polygonMesh);
 		}
-
 
 		if(doColors) {
 			toOf(cloudColor, mesh, doScale, doScale, doScale);
