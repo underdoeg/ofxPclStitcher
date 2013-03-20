@@ -40,7 +40,7 @@
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">bin\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">obj\$(Configuration)\</IntDir>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateManifest>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">bin\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">obj\$(Configuration)\</IntDir>
@@ -57,7 +57,7 @@
       <PrecompiledHeader />
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>C:\Users\undef\programming\openFrameworks\addons\ofxXmlSettings\libs;C:\Users\undef\programming\openFrameworks\addons\ofxXmlSettings\src;C:\Users\undef\programming\openFrameworks\addons\ofxGui\src;C:\Program Files %28x86%29\PCL 1.6.0\3rdParty\FLANN\include;C:\Program Files %28x86%29\PCL 1.6.0\3rdParty\Boost\include;C:\Program Files %28x86%29\PCL 1.6.0\3rdParty\Eigen\include;C:\Program Files %28x86%29\PCL 1.6.0\include\pcl-1.6;C:\Users\undef\programming\openFrameworks\addons\ofxPclStitcher\src;C:\Program Files\OpenNI\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\undef\programming\openFrameworks\addons\ofxXmlSettings\libs;C:\Users\undef\programming\openFrameworks\addons\ofxXmlSettings\src;C:\Users\undef\programming\openFrameworks\addons\ofxGui\src;C:\Program Files %28x86%29\PCL 1.6.0\3rdParty\FLANN\include;C:\Program Files %28x86%29\PCL 1.6.0\3rdParty\Boost\include;C:\Program Files %28x86%29\PCL 1.6.0\3rdParty\Eigen\include;C:\Program Files %28x86%29\PCL 1.6.0\include\pcl-1.6;C:\Users\undef\programming\openFrameworks\addons\ofxPclStitcher\src;C:\Program Files %28x86%29\OpenNI\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
@@ -67,8 +67,9 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention />
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>pcl_common_release.lib;pcl_filters_release.lib;pcl_search_release.lib;pcl_surface_release.lib;pcl_kdtree_release.lib;pcl_features_release.lib;pcl_io_release.lib;openNI.lib;boost_system-vc100-mt-1_49.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\OpenNI\Lib;C:\Program Files %28x86%29\PCL 1.6.0\3rdParty\FLANN\lib;C:\Program Files %28x86%29\PCL 1.6.0\3rdParty\Boost\lib;C:\Program Files %28x86%29\PCL 1.6.0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>PocoFoundationd.lib;atlthunk.lib;LIBC.lib;LIBCMT;msvcrt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent />
   </ItemDefinitionGroup>
