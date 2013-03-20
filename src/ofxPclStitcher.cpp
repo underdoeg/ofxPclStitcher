@@ -72,9 +72,10 @@ void ofxPclStitcher::setup(bool autoCreateDevices, bool dc) {
 		}
 	}
 
-	cam.disableMouseInput();
 	ofAddListener(ofEvents().keyPressed, this, &ofxPclStitcher::keyPressed);
 	ofAddListener(ofEvents().keyReleased, this, &ofxPclStitcher::keyReleased);
+
+	firstDraw = false;
 }
 
 ofxPclStitcherDevice* ofxPclStitcher::createDevice() {
@@ -102,6 +103,20 @@ ofxPclStitcherDevice* ofxPclStitcher::createDevice(string address) {
 }
 
 void ofxPclStitcher::update() {
+	bool newData = true;
+	for(DeviceList::iterator it = devices.begin(); it != devices.end(); it++) {
+		if(!(*it)->hasNewData())
+			newData = false;
+	}
+
+	if(!newData){
+		return;
+	}
+
+	for(DeviceList::iterator it = devices.begin(); it != devices.end(); it++) {
+		(*it)->copyCloudFromThread();
+	}
+
 	//copy clouds over from thread
 	for(DeviceList::iterator it = devices.begin(); it != devices.end(); it++) {
 		(*it)->copyCloudFromThread();
@@ -231,7 +246,7 @@ void ofxPclStitcher::draw() {
 	}
 
 	ofEventArgs e;
-	ofNotifyEvent(onDebugDraw, e);
+	ofNotifyEvent(onCalibrateDraw, e);
 
 	cam.end();
 	glDisable(GL_DEPTH_TEST);
@@ -244,6 +259,10 @@ void ofxPclStitcher::draw() {
 
 	ofPopStyle();
 
+	if(firstDraw){
+		firstDraw = false;
+		cam.disableMouseInput();
+	}
 }
 
 void ofxPclStitcher::toggleDebug() {

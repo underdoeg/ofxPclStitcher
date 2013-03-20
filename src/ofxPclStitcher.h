@@ -37,7 +37,7 @@ public:
 	ofParameter<float> triangulationRadius;
 	ofParameter<bool> doNoiseReduction;
 
-	ofEvent<ofEventArgs> onDebugDraw;
+	ofEvent<ofEventArgs> onCalibrateDraw;
 
 	ofMesh mesh;
 
@@ -79,6 +79,8 @@ private:
 	ofParameter<bool> doConcaveHull;
 
 	int guiWidth;
+
+	bool firstDraw; //hack for ofEasyCam
 };
 
 #endif // OFXPCLSTITCHER_H

@@ -45,6 +45,8 @@ class ofxPclStitcherDevice {
 public:
 	~ofxPclStitcherDevice();
 
+	bool hasNewData();
+
 	int id;
 
 private:
@@ -81,6 +83,8 @@ private:
 	pcl::ApproximateVoxelGrid<ofxPclPointColor> gridColor;
 
 	ofxPclStitcherDeviceNode dNode;
+
+	bool dataNew;
 
 	//PARAMETERS
 	ofParameterGroup parameters;
