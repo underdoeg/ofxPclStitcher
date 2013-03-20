@@ -27,7 +27,7 @@ Eigen::Matrix4f toEigen(ofMatrix4x4 m) {
 	return ret;
 };
 
-ofVec4f toOf(Eigen::Vector4f v) {
+ofVec4f toOf(const Eigen::Vector4f& v) {
 	return ofVec4f(v[0], v[1], v[2], v[3]);
 }
 
