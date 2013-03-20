@@ -1,7 +1,7 @@
 #ifndef OFXPCLSTITCHERDEVICE_H
 #define OFXPCLSTITCHERDEVICE_H
 
-#include <XnCppWrapper.h>
+
 #include <pcl/io/pcd_io.h>
 #include <pcl/io/openni_grabber.h>
 #include <pcl/point_cloud.h>

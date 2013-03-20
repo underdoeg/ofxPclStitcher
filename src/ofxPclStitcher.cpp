@@ -196,6 +196,7 @@ void ofxPclStitcher::update() {
 			gp3.reconstruct(polygonMesh);
 		}
 
+
 		if(doColors) {
 			toOf(cloudColor, mesh, doScale, doScale, doScale);
 			if(doTriangulation)

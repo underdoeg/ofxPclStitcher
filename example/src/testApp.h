@@ -1,7 +1,5 @@
 #pragma once
 
-#include <XnCppWrapper.h>
-
 #include "ofxPclStitcher.h"
 
 #include "ofMain.h"

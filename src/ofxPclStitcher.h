@@ -39,6 +39,9 @@ public:
 
 	ofMesh mesh;
 
+	ofxPclCloudPtr cloud;
+	ofxPclCloudPtrColor cloudColor;
+
 private:
 	typedef std::vector< ofPtr<ofxPclStitcherDevice> > DeviceList;
 	DeviceList devices;
@@ -46,9 +49,6 @@ private:
 	ofParameterGroup parameters;
 	ofParameter<bool> doColors;
 	ofEasyCam cam;
-
-	ofxPclCloudPtr cloud;
-	ofxPclCloudPtrColor cloudColor;
 
 	pcl::ApproximateVoxelGrid<ofxPclPoint> grid;
 	pcl::ApproximateVoxelGrid<ofxPclPointColor> gridColor;
