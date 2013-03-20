@@ -37,12 +37,17 @@ public:
 	ofParameter<float> triangulationRadius;
 	ofParameter<bool> doNoiseReduction;
 
+	ofEvent<ofEventArgs> onDebugDraw;
+
 	ofMesh mesh;
 
 	ofxPclCloudPtr cloud;
 	ofxPclCloudPtrColor cloudColor;
+	ofxPanel gui;
 
 private:
+	void keyReleased(ofKeyEventArgs& e);
+	void keyPressed(ofKeyEventArgs& e);
 	typedef std::vector< ofPtr<ofxPclStitcherDevice> > DeviceList;
 	DeviceList devices;
 	unsigned int curDeviceNumber;
@@ -73,7 +78,6 @@ private:
 
 	ofParameter<bool> doConcaveHull;
 
-	ofxPanel gui;
 	int guiWidth;
 };
 

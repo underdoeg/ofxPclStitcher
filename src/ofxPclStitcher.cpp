@@ -71,6 +71,10 @@ void ofxPclStitcher::setup(bool autoCreateDevices, bool dc) {
 			createDevice();
 		}
 	}
+
+	cam.disableMouseInput();
+	ofAddListener(ofEvents().keyPressed, this, &ofxPclStitcher::keyPressed);
+	ofAddListener(ofEvents().keyReleased, this, &ofxPclStitcher::keyReleased);
 }
 
 ofxPclStitcherDevice* ofxPclStitcher::createDevice() {
@@ -213,22 +217,26 @@ void ofxPclStitcher::update() {
 }
 
 void ofxPclStitcher::draw() {
+	if(!doCalibrate)
+		return;
+
 	ofPushStyle();
+
 	cam.begin();
+
 	glEnable(GL_DEPTH_TEST);
 	ofEnableAlphaBlending();
 	for(DeviceList::iterator it = devices.begin(); it != devices.end(); it++) {
 		(*it)->draw();
 	}
 
-	if(!doCalibrate)
-		mesh.draw();
+	ofEventArgs e;
+	ofNotifyEvent(onDebugDraw, e);
 
 	cam.end();
 	glDisable(GL_DEPTH_TEST);
 
-	if(doCalibrate)
-		gui.draw();
+	gui.draw();
 
 	for(DeviceList::iterator it = devices.begin(); it != devices.end(); it++) {
 		(*it)->drawOverlay();
@@ -240,4 +248,16 @@ void ofxPclStitcher::draw() {
 
 void ofxPclStitcher::toggleDebug() {
 	doCalibrate = !doCalibrate;
+}
+
+void ofxPclStitcher::keyPressed(ofKeyEventArgs& e) {
+	if(doCalibrate && e.key == 'c') {
+		cam.enableMouseInput();
+	}
+}
+
+void ofxPclStitcher::keyReleased(ofKeyEventArgs& e) {
+	if(e.key == 'c') {
+		cam.disableMouseInput();
+	}
 }
