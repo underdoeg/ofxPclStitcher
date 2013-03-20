@@ -22,6 +22,8 @@ void testApp::draw(){
 
 	ofSetColor(255);
 	toggleCalibrate.draw();
+
+	ofDrawBitmapStringHighlight("FPS "+ofToString(ofGetFrameRate()), 20, ofGetHeight()-20);
 }
 
 //--------------------------------------------------------------

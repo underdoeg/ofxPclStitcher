@@ -43,6 +43,8 @@ ofxPclStitcherDevice::ofxPclStitcherDevice(string address, ofParameter<bool> dc)
 	cloudColor = ofxPclCloudPtrColor(new ofxPclCloudColor());
 	cloudThreadColor = ofxPclCloudPtrColor(new ofxPclCloudColor());
 
+	ofLog() << "CREATING DEVICE WITH ADDRESS " << address;
+
 	try {
 		interface = new pcl::OpenNIGrabber(address);
 
@@ -92,7 +94,6 @@ void ofxPclStitcherDevice::copyCloudFromThread() {
 }
 
 void ofxPclStitcherDevice::processCloud() {
-
 	//Z filtering
 	if(doColors) {
 		passThroughColor.setFilterFieldName ("z");
@@ -100,13 +101,15 @@ void ofxPclStitcherDevice::processCloud() {
 		passThroughColor.setFilterLimits (0.0, cropZ/scale);
 		passThroughColor.setInputCloud (cloudColor);
 	} else {
-		passThrough.setFilterFieldName ("z");
-		passThrough.filter (*cloud);
-		passThrough.setFilterLimits (0.0, cropZ/scale);
+		ofxPclCloud cloud_temp;
 		passThrough.setInputCloud (cloud);
+		passThrough.setFilterFieldName ("z");
+		passThrough.setFilterLimits (0.0, cropZ/scale);
+		passThrough.filter (cloud_temp);
+		pcl::copyPointCloud(cloud_temp, *cloud);
+		//
 	}
-
-
+	
 
 	//do downsampling
 	if(downsample) {

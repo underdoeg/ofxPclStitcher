@@ -133,6 +133,7 @@ void ofxPclStitcher::update() {
 		}
 
 		//construct the concave hull
+		/*
 		if(doConcaveHull) {
 			if(doColors) {
 				concaveHullColor.setInputCloud(cloudColor);
@@ -143,8 +144,9 @@ void ofxPclStitcher::update() {
 				concaveHull.setAlpha(concaveHullSize);
 				concaveHull.reconstruct(*cloud);
 			}
-		}
+		}*/
 
+		/*
 		if(doNoiseReduction) {
 			pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ>);
 
@@ -161,7 +163,7 @@ void ofxPclStitcher::update() {
 
 			pcl::copyPointCloud(mls_points, *cloud);
 		}
-
+		*/
 		/*
 		if(doTriangulation) {
 			//first calculate normals
