@@ -31,11 +31,13 @@ public:
 	ofParameter<bool> doDownsample;
 	ofParameter<float> downsampleSize;
 	ofParameter<bool> doCalibrate;
-	ofParameter<float> doScale;
+	ofParameter<float> scale;
 	ofParameter<float> concaveHullSize;
 	ofParameter<bool> doTriangulation;
 	ofParameter<float> triangulationRadius;
 	ofParameter<bool> doNoiseReduction;
+
+	ofEvent<ofEventArgs> onPreprocess;
 
 	ofEvent<ofEventArgs> onCalibrateDraw;
 

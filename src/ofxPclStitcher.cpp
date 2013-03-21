@@ -16,7 +16,7 @@ void ofxPclStitcher::setup(bool autoCreateDevices, bool dc) {
 	doColors = dc;
 	doDownsample.set("DOWNSAMPLE", true);
 	downsampleSize.set("DOWNSAMPLE SIZE", .3, 0.001, .1);
-	doScale.set("SCALE", 100, 0.1, 1000);
+	scale.set("SCALE", 100, 0.1, 1000);
 
 	doConcaveHull.set("CONCAVE HULL", false);
 	concaveHullSize.set("CONCAVE HULL SIZE", .1, .0001, .5);
@@ -35,9 +35,9 @@ void ofxPclStitcher::setup(bool autoCreateDevices, bool dc) {
 	gui.add(doDownsample);
 	gui.add(downsampleSize);
 	gui.add(doNoiseReduction);
-	//gui.add(doTriangulation);
-	//gui.add(triangulationRadius);
-	//gui.add(doConcaveHull);
+	gui.add(doTriangulation);
+	gui.add(triangulationRadius);
+	gui.add(doConcaveHull);
 	gui.loadFromFile(settingsFilename);
 	gui.setPosition(10, 40);
 	gui.setWidthElements(guiWidth);
@@ -108,7 +108,7 @@ ofxPclStitcherDevice* ofxPclStitcher::createDevice(string address) {
 	ofxPclStitcherDevice* device = new ofxPclStitcherDevice(address, doColors);
 	device->downsample.makeReferenceTo(doDownsample);
 	device->downsampleSize.makeReferenceTo(downsampleSize);
-	device->scale.makeReferenceTo(doScale);
+	device->scale.makeReferenceTo(scale);
 	device->debug.makeReferenceTo(doCalibrate);
 	gui.add(device->parameters);
 	ofxBaseGui* kGui = gui.getControl(gui.getNumControls()-1);
@@ -158,6 +158,9 @@ void ofxPclStitcher::update() {
 					*cloud += *(*it)->cloud;
 		}
 
+		ofEventArgs a;
+		ofNotifyEvent(onPreprocess, a);
+
 		//downsample if needed
 		if(doDownsample) {
 			if(doColors) {
@@ -170,6 +173,8 @@ void ofxPclStitcher::update() {
 				grid.filter(*cloud);
 			}
 		}
+
+
 
 		//construct the concave hull
 		if(doConcaveHull) {
@@ -237,11 +242,11 @@ void ofxPclStitcher::update() {
 
 
 		if(doColors) {
-			toOf(cloudColor, mesh, doScale, doScale, doScale);
+			toOf(cloudColor, mesh, scale, scale, scale);
 			if(doTriangulation)
 				addIndices(mesh, polygonMesh);
 		} else {
-			toOf(cloud, mesh, doScale, doScale, doScale);
+			toOf(cloud, mesh, scale, scale, scale);
 			if(doTriangulation)
 				addIndices(mesh, polygonMesh);
 		}
