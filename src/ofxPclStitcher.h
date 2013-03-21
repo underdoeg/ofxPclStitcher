@@ -46,6 +46,7 @@ public:
 	ofxPanel gui;
 
 private:
+	void draw3d();
 	void keyReleased(ofKeyEventArgs& e);
 	void keyPressed(ofKeyEventArgs& e);
 	typedef std::vector< ofPtr<ofxPclStitcherDevice> > DeviceList;
@@ -53,7 +54,11 @@ private:
 	unsigned int curDeviceNumber;
 	ofParameterGroup parameters;
 	ofParameter<bool> doColors;
-	ofEasyCam cam;
+	ofEasyCam easyCam;
+	ofCamera camTop;
+	ofCamera camLeft;
+	ofCamera camFront;
+	ofCamera* cam;
 
 	pcl::ApproximateVoxelGrid<ofxPclPoint> grid;
 	pcl::ApproximateVoxelGrid<ofxPclPointColor> gridColor;
@@ -78,9 +83,11 @@ private:
 
 	ofParameter<bool> doConcaveHull;
 
+	ofParameter<bool> drawGrid;
+
 	int guiWidth;
 
-	bool firstDraw; //hack for ofEasyCam
+	int firstDraw; //hack for ofEasyCam
 };
 
 #endif // OFXPCLSTITCHER_H

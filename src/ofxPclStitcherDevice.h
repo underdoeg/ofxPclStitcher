@@ -103,6 +103,8 @@ private:
 	ofParameter<float> downsampleSize;
 	ofParameter<float> scale;
 	ofParameter<bool> debug;
+
+	ofParameter<bool> doDraw;
 };
 
 #endif // OFXPCLSTITCHERDEVICE_H

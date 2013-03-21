@@ -9,7 +9,7 @@ ofColor getColorForId(int id) {
 	case 2:
 		return ofColor(180, 180, 0);
 	case 3:
-		return ofColor(0, 0, 180);
+		return ofColor(0, 180, 180);
 	case 4:
 		return ofColor(0, 180, 180);
 	case 5:

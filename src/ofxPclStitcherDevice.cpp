@@ -9,6 +9,8 @@ ofxPclStitcherDevice::ofxPclStitcherDevice(string address, ofParameter<bool> dc)
 
 	dataNew = false;
 
+	doDraw.set("DRAW", true);
+
 	id = curId;
 	curId++;
 
@@ -29,6 +31,7 @@ ofxPclStitcherDevice::ofxPclStitcherDevice(string address, ofParameter<bool> dc)
 	rotationZ.set("ROTATION Z", 0, minRot, maxRot);
 
 	parameters.setName("PCL DEVICE "+ofToString(id));
+	parameters.add(doDraw);
 	parameters.add(cropZ);
 	parameters.add(translateX);
 	parameters.add(translateY);
@@ -101,6 +104,9 @@ void ofxPclStitcherDevice::copyCloudFromThread() {
 }
 
 void ofxPclStitcherDevice::processCloud() {
+	if(debug && !doDraw)
+		return;
+
 	//Z filtering
 	if(doColors) {
 		passThroughColor.setFilterFieldName ("z");
@@ -132,22 +138,35 @@ void ofxPclStitcherDevice::processCloud() {
 	}
 
 	//apply matrix transforms
-	ofMatrix4x4 matrix;
-	matrix.translate(translateX/scale, translateY/scale, translateZ/scale);
-	matrix.rotate(rotationX, 1, 0, 0);
-	matrix.rotate(rotationY, 0, 1, 0);
-	matrix.rotate(rotationZ, 0, 0, 1);
-	matrix.scale(-1, -1, 1);
+	/*
+	ofQuaternion quat;
+	ofVec3f Znormal(0, 0, 1);
+	ofVec3f Xnormal(1, 0, 0);
+	ofVec3f Ynormal(1, 0, 1);
+	ofQuaternion qr (rotationZ, Znormal); // quat roll.
+	ofQuaternion qp (rotationX, Xnormal); // quat pitch.
+	ofQuaternion qh (rotationY, Ynormal); // quat heading or yaw.
+	quat = qr * qp * qh;
+	*/
+	dNode.resetTransform();
+	dNode.tilt(rotationX);
+	dNode.pan(rotationY);
+	dNode.roll(rotationZ);
+	dNode.setPosition(translateX, translateY, translateZ);
 
+	ofMatrix4x4 matrix = dNode.getGlobalTransformMatrix().getInverse();
+	matrix.setTranslation(translateX/scale, translateY/scale, translateZ/scale);
+	//matrix.scale(-1, -1, 1);
+
+	/*
 	if(debug) {
-		ofMatrix4x4 matrixDebug;
-		matrixDebug.translate(translateX, translateY, translateZ);
-		matrixDebug.rotate(rotationX, 1, 0, 0);
-		matrixDebug.rotate(rotationY, 0, 1, 0);
-		matrixDebug.rotate(rotationZ, 0, 0, 1);
-		matrixDebug.scale(-1, -1, 1);
-		dNode.setTransformMatrix(matrixDebug);
+		ofMatrix4x4 matrixNode;
+		matrixNode.setRotate(quat);
+		matrixNode.translate(translateX, translateY, translateZ);
+		matrixNode.scale(-1, -1, 1);
+		dNode.setTransformMatrix(matrixNode);
 	}
+	*/
 
 	//TODO: rotation
 	//matrix.scale(1, -1, -1);
@@ -173,6 +192,8 @@ void ofxPclStitcherDevice::processCloud() {
 }
 
 void ofxPclStitcherDevice::draw() {
+	if(!doDraw)
+		return;
 	if(debug) {
 		ofSetColor(color);
 		mesh.draw();

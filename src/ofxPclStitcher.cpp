@@ -24,11 +24,14 @@ void ofxPclStitcher::setup(bool autoCreateDevices, bool dc) {
 	doTriangulation.set("TRIANGULATION", false);
 	triangulationRadius.set("TRIANGULATION RADIUS", .03, .0001, 3);
 
+	drawGrid.set("DRAW GRID", true);
+
 	settingsFilename = "pclStitcherSettings.xml";
 
 	guiWidth = 350;
 	gui.setup("PCL STITCHER SETTINGS", settingsFilename);
 	gui.setSize(guiWidth, gui.getHeight());
+	gui.add(drawGrid);
 	gui.add(doDownsample);
 	gui.add(downsampleSize);
 	gui.add(doNoiseReduction);
@@ -75,7 +78,21 @@ void ofxPclStitcher::setup(bool autoCreateDevices, bool dc) {
 	ofAddListener(ofEvents().keyPressed, this, &ofxPclStitcher::keyPressed);
 	ofAddListener(ofEvents().keyReleased, this, &ofxPclStitcher::keyReleased);
 
-	firstDraw = false;
+	firstDraw = 0;
+
+	//camTop.enableOrtho();
+	camTop.setPosition(ofVec3f(1, -200, 1));
+	camTop.lookAt(ofVec3f(1, 1, 1));
+
+	//camLeft.enableOrtho();
+	camLeft.setPosition(ofVec3f(200, 0, 0));
+	camLeft.lookAt(ofVec3f(0, 0, 0));
+
+	//camFront.enableOrtho();
+	camFront.setPosition(ofVec3f(0, 0, 200));
+	camFront.lookAt(ofVec3f(0, 0, 0));
+
+	cam = &easyCam;
 }
 
 ofxPclStitcherDevice* ofxPclStitcher::createDevice() {
@@ -94,6 +111,8 @@ ofxPclStitcherDevice* ofxPclStitcher::createDevice(string address) {
 	device->scale.makeReferenceTo(doScale);
 	device->debug.makeReferenceTo(doCalibrate);
 	gui.add(device->parameters);
+	ofxBaseGui* kGui = gui.getControl(gui.getNumControls()-1);
+	kGui->setHeaderBackgroundColor(device->color);
 	gui.loadFromFile(settingsFilename);
 	devices.push_back(ofPtr<ofxPclStitcherDevice>(device));
 
@@ -109,7 +128,7 @@ void ofxPclStitcher::update() {
 			newData = false;
 	}
 
-	if(!newData){
+	if(!newData) {
 		return;
 	}
 
@@ -135,7 +154,8 @@ void ofxPclStitcher::update() {
 			if(doColors)
 				*cloudColor += *(*it)->cloudColor;
 			else
-				*cloud += *(*it)->cloud;
+				if((*it)->doDraw)
+					*cloud += *(*it)->cloud;
 		}
 
 		//downsample if needed
@@ -237,18 +257,28 @@ void ofxPclStitcher::draw() {
 
 	ofPushStyle();
 
-	cam.begin();
-
 	glEnable(GL_DEPTH_TEST);
 	ofEnableAlphaBlending();
-	for(DeviceList::iterator it = devices.begin(); it != devices.end(); it++) {
-		(*it)->draw();
+
+	//top Left
+	//ofPushView();
+	//easyCam.begin();
+
+	cam->begin();
+
+	//ofPushMatrix();
+	if(cam != &easyCam){
+		//ofTranslate(ofGetWidth()*.5, ofGetHeight()*.5);
 	}
 
-	ofEventArgs e;
-	ofNotifyEvent(onCalibrateDraw, e);
+	draw3d();
+	//easyCam.end();
+	//ofPopMatrix();
 
-	cam.end();
+	cam->end();
+
+	//ofPopView();
+
 	glDisable(GL_DEPTH_TEST);
 
 	gui.draw();
@@ -259,10 +289,26 @@ void ofxPclStitcher::draw() {
 
 	ofPopStyle();
 
-	if(firstDraw){
-		firstDraw = false;
-		cam.disableMouseInput();
+	if(firstDraw==4) {
+		firstDraw = 100;
+		easyCam.disableMouseInput();
 	}
+	firstDraw++;
+}
+
+void ofxPclStitcher::draw3d() {
+	//ofDrawGrid(100, 13, false, true, false, false);
+	ofPushMatrix();
+	ofRotateZ(90);
+	if(drawGrid)
+		ofDrawGridPlane(100);
+	ofPopMatrix();
+	ofDrawAxis(100);
+	for(DeviceList::iterator it = devices.begin(); it != devices.end(); it++) {
+		(*it)->draw();
+	}
+	ofEventArgs e;
+	ofNotifyEvent(onCalibrateDraw, e);
 }
 
 void ofxPclStitcher::toggleDebug() {
@@ -271,12 +317,22 @@ void ofxPclStitcher::toggleDebug() {
 
 void ofxPclStitcher::keyPressed(ofKeyEventArgs& e) {
 	if(doCalibrate && e.key == 'c') {
-		cam.enableMouseInput();
+		easyCam.enableMouseInput();
 	}
 }
 
 void ofxPclStitcher::keyReleased(ofKeyEventArgs& e) {
 	if(e.key == 'c') {
-		cam.disableMouseInput();
+		easyCam.disableMouseInput();
+	}else if(e.key == 49){
+		cam = &camTop;
+	}else if(e.key == 50){
+		cam = &camFront;
+	}else if(e.key == 51){
+		cam = &camLeft;
+	}else if(e.key == 52){
+		cam = &easyCam;
+	}else if(e.key == 'r'){
+
 	}
 }
